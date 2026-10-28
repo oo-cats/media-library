@@ -1,0 +1,17 @@
+/vendor/
+/js/node_modules/
+/.local/
+/.phpunit.cache/
+/.phpunit.result.cache
+*.log
+.env
+.env.*
+/AGENTS.md
+/.repo-ownership.json
+/docs/
+/README*
+/CHANGELOG*
+*.md
+*.rst
+/js/dist/*.map
+/scripts/

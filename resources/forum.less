@@ -1,0 +1,68 @@
+.MediaLibraryModal.Modal--large {
+  width: ~"min(980px, 96vw)";
+  .Modal-body { padding: 20px; }
+}
+.MediaLibrary {
+  &-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+  &-toolbar &-tabs { margin: 0; gap: 4px; }
+  &-toolbar > .Button { flex-shrink: 0; }
+  &-tabs, &-search, &-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  &-search .FormControl { flex: 1; min-width: 140px; }
+  &-upload { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px; background: @control-bg; border-radius: @border-radius; margin-bottom: 16px; }
+  &-upload .FormControl { flex: 1; min-width: 160px; }
+  &-upload input[type=file] { width: 1px; height: 1px; opacity: 0; position: absolute; }
+  &-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; max-height: 55vh; overflow-y: auto; align-content: start; padding: 2px; }
+  &-card { min-width: 0; border: 1px solid @control-bg; border-radius: @border-radius; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  &-card > a > img { width: 100%; height: 140px; object-fit: contain; background: @control-bg; }
+  &-card > strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  &-document { height: 140px; display: grid; place-items: center; background: @control-bg; overflow-wrap: anywhere; }
+  &-card small, &-upload small { color: @muted-color; }
+  &-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  &-tags span { max-width: 100%; overflow-wrap: anywhere; background: @control-bg; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+  &-tagToggle { border: 0; border-radius: 4px; padding: 2px 6px; background: transparent; color: @link-color; font-size: 12px; cursor: pointer; }
+  &-tagToggle:focus-visible { outline: 2px solid @primary-color; }
+  &-edit { display: flex; flex-direction: column; gap: 8px; }
+  &-actions { margin-top: auto; margin-bottom: 0; }
+  &-actions .Button { padding: 7px 10px; font-size: 12px; }
+  &-empty { padding: 30px 0; text-align: center; color: @muted-color; }
+  &-pagination { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 18px; color: @muted-color; }
+  &-image { max-width: 100%; height: auto; }
+  .Post-body &-emoji, .TextEditor &-emoji, &-emoji {
+    display: inline-block;
+    width: auto; height: auto;
+    max-width: ~"var(--es-inline-width, 3em)";
+    max-height: ~"min(var(--es-inline-height, 1.5em), var(--es-inline-cap, 32px))";
+    vertical-align: ~"var(--es-baseline, -0.15em)";
+    margin-inline: ~"var(--es-gap, 0.1em)";
+  }
+  &-stickerGroup {
+    display: flex;
+    flex-direction: ~"var(--es-sticker-direction, column)";
+    flex-wrap: ~"var(--es-sticker-wrap, nowrap)";
+    align-items: ~"var(--es-sticker-cross, flex-start)";
+    justify-content: ~"var(--es-sticker-justify, flex-start)";
+    gap: ~"var(--es-sticker-gap, 8px)";
+    margin: 8px 0 14px;
+    max-width: 100%;
+  }
+  // Keep semantic wrappers without reserving the original image width in flex rows.
+  &-sticker { display: contents; }
+  .Post-body &-stickerImage, .TextEditor &-stickerImage, &-stickerImage {
+    display: block; width: auto; height: auto; flex: 0 0 auto;
+    max-width: ~"min(100%, var(--es-sticker-width, 160px))";
+    max-height: ~"var(--es-sticker-height, 160px)";
+  }
+}
+@media (max-width: 480px) {
+  .MediaLibrary-toolbar { flex-wrap: wrap; }
+  .MediaLibrary-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+.MediaLibrary-picker {
+  .MediaLibrary-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+  .MediaLibrary-pick { display: grid; place-items: center; min-width: 0; height: 120px; padding: 8px; border: 1px solid @control-bg; border-radius: @border-radius; background: @control-bg; cursor: pointer; }
+  .MediaLibrary-pick img { max-width: 100%; max-height: 104px; object-fit: contain; }
+  .MediaLibrary-pick:hover, .MediaLibrary-pick:focus-visible { outline: 2px solid @primary-color; outline-offset: 2px; }
+  .MediaLibrary-url { margin-top: 16px; }
+  .MediaLibrary-url summary { cursor: pointer; color: @muted-color; }
+  .MediaLibrary-url .MediaLibrary-search { margin-top: 10px; }
+}

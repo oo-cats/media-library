@@ -1,0 +1,29 @@
+{
+  "name": "local/media-library",
+  "description": "Private attachment library with category tags, controlled sharing and custom emoji",
+  "version": "0.2.0",
+  "type": "flarum-extension",
+  "license": "MIT",
+  "require": {"php": "^8.3", "ext-fileinfo": "*", "ext-gd": "*", "ext-mbstring": "*", "flarum/core": "^1.8"},
+  "require-dev": {
+    "flarum/testing": "^1.0", "flarum/core": "1.8.19",
+    "flarum/markdown": "1.8.1", "flarum/tags": "1.8.8", "flarum/approval": "1.8.2"
+  },
+  "autoload": {"psr-4": {"Local\\MediaLibrary\\": "src/"}},
+  "autoload-dev": {"psr-4": {"Local\\MediaLibrary\\Tests\\": "tests/"}},
+  "extra": {"flarum-extension": {"title": "media-library", "icon": {"name": "fas fa-puzzle-piece", "backgroundColor": "#456", "color": "#fff"}}},
+  "scripts": {
+    "test": ["@test:unit", "@test:integration"],
+    "test:unit": "phpunit -c tests/phpunit.unit.xml",
+    "test:integration": "phpunit -c tests/phpunit.integration.xml",
+    "test:setup": "@php tests/integration/setup.php"
+  },
+  "config": {
+    "sort-packages": true,
+    "policy": {"advisories": {"ignore-id": {
+      "PKSA-w9tt-7782-78jx": {"on-audit": false, "reason": "Local Flarum 1.8.19 compatibility tests require Flysystem 1.x. Audit remains enabled; not a production security fix."}
+    }}}
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

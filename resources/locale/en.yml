@@ -1,0 +1,51 @@
+local-media-library:
+  admin:
+    max_file: Maximum file size (MB; PHP and web server limits also apply)
+    quota: Storage per user (MB, including archived files)
+    max_files: Files per user (including archived files)
+    upload: Upload personal attachments
+    manage: Manage other users' attachments
+  forum:
+    title: Attachment library
+    emoji_title: Custom emoji
+    image_picker_title: Insert image
+    image_empty: No available images match this search.
+    image_url_toggle: Insert an image URL
+    image_url: Image URL
+    image_url_invalid: Enter a valid HTTP or HTTPS image URL.
+    image_url_unavailable: This attachment is unavailable or is not shared for reuse.
+    help: public allows reuse by signed-in users; emoji adds an image to the picker. Embedded files follow post visibility.
+    scope: Library scope
+    mine: My files
+    shared: Shared files
+    archived: Archived
+    categories: Category tags, separated by commas
+    shared_label: public · Allow reuse
+    emoji_label: emoji · Use as emoji
+    filename: Filename
+    references: Referencing posts
+    search: Search tags, filename prefix or complete ID
+    search_action: Search
+    pagination: Library pages
+    previous: Previous
+    next: Next
+    page: Page {number}
+    more_tags: Show {count} more tags
+    fewer_tags: Collapse tags
+    upload_toggle: Upload files
+    tag_filter: Exact tag filter
+    filter: Filter
+    upload: Choose files
+    upload_hint: Drop multiple files to upload sequentially; maximum per file
+    working: Working…
+    empty: No matching files.
+    more: Load more
+    insert: Insert
+    copy: Copy reference
+    copied: Attachment reference copied.
+    edit: Edit
+    save: Save
+    cancel: Cancel
+    archive: Archive
+    restore: Restore
+    archive_confirm: Archive blocks new references. Existing posts keep displaying the file. Unreferenced files may be purged after seven days. Continue?

@@ -1,0 +1,6 @@
+{
+  "name": "local-media-library",
+  "private": true,
+  "scripts": {"build": "webpack --mode production", "dev": "webpack --mode development --watch"},
+  "devDependencies": {"flarum-webpack-config": "2.0.1", "webpack": "^5.104.1", "webpack-cli": "^5.1.4"}
+}

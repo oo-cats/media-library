@@ -229,6 +229,60 @@ final class LibraryTest extends TestCase
         $this->assertSame(404, $this->read($asset, 3, $post)->getStatusCode());
     }
 
+
+    public function test_owner_can_immediately_purge_unreferenced_attachment(): void
+    {
+        $asset = $this->asset(['public', 'emoji']);
+        $this->assertGreaterThan(0, (int) User::findOrFail(2)->local_media_bytes);
+        $response = $this->send($this->request('POST', '/api/media-library/assets/'.$asset->uuid.'/purge', [
+            'authenticatedAs' => 2, 'json' => ['version' => $asset->version],
+        ]));
+        $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+        $this->assertNull(Asset::where('uuid', $asset->uuid)->first());
+        $this->assertSame(0, (int) User::findOrFail(2)->local_media_bytes);
+        $this->assertSame(0, (int) User::findOrFail(2)->local_media_count);
+        $this->assertSame(404, $this->read($asset, 2)->getStatusCode());
+    }
+
+    public function test_owner_can_immediately_purge_archived_attachment(): void
+    {
+        $asset = $this->asset();
+        $archived = $this->library()->update(User::findOrFail(2), $asset->uuid, ['version' => $asset->version], true);
+        $response = $this->send($this->request('POST', '/api/media-library/assets/'.$asset->uuid.'/purge', [
+            'authenticatedAs' => 2, 'json' => ['version' => $archived->version],
+        ]));
+        $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+        $this->assertNull(Asset::where('uuid', $asset->uuid)->first());
+    }
+
+    public function test_unprivileged_user_cannot_purge_another_users_attachment(): void
+    {
+        $asset = $this->asset();
+        $response = $this->send($this->request('POST', '/api/media-library/assets/'.$asset->uuid.'/purge', [
+            'authenticatedAs' => 3, 'json' => ['version' => $asset->version],
+        ]));
+        $this->assertSame(403, $response->getStatusCode(), (string) $response->getBody());
+        $this->assertSame('active', $asset->fresh()->status);
+    }
+
+    public function test_purge_refuses_referenced_assets_and_stale_versions(): void
+    {
+        $asset = $this->asset();
+        $this->postId($this->discussion('[media='.$asset->uuid.']'));
+        $response = $this->send($this->request('POST', '/api/media-library/assets/'.$asset->uuid.'/purge', [
+            'authenticatedAs' => 2, 'json' => ['version' => $asset->version],
+        ]));
+        $this->assertSame(422, $response->getStatusCode(), (string) $response->getBody());
+        $this->assertSame('active', $asset->fresh()->status);
+        $unreferenced = $this->asset();
+        $this->library()->update(User::findOrFail(2), $unreferenced->uuid, ['version' => 1, 'name' => 'updated.png']);
+        $stale = $this->send($this->request('POST', '/api/media-library/assets/'.$unreferenced->uuid.'/purge', [
+            'authenticatedAs' => 2, 'json' => ['version' => 1],
+        ]));
+        $this->assertSame(422, $stale->getStatusCode(), (string) $stale->getBody());
+        $this->assertSame('active', $unreferenced->fresh()->status);
+    }
+
     public function test_cursor_pagination_has_no_duplicates_and_filters_categories(): void
     {
         $this->asset(['猫']);

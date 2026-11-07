@@ -99,6 +99,48 @@ final class Library
         return $this->processEmoji($actor, $asset);
     }
 
+
+    /** Permanently remove an unreferenced asset, leaving interrupted purges recoverable. */
+    public function purge(User $actor, string $uuid, int $version): void
+    {
+        $actor->assertRegistered();
+        $asset = $this->db->transaction(function () use ($actor, $uuid, $version) {
+            $asset = Asset::where('uuid', $uuid)->lockForUpdate()->firstOrFail();
+            if ((int) $asset->user_id !== (int) $actor->id) {
+                $actor->assertCan('local-media-library.manage');
+            }
+            if ($version !== (int) $asset->version) {
+                throw new ValidationException(['version' => '附件已被修改，请刷新后再操作。']);
+            }
+            if (!in_array($asset->status, ['active', 'archived'], true)) {
+                throw new ValidationException(['file' => '附件正在物理清理，请稍后重试。']);
+            }
+            if ($asset->posts()->exists()) {
+                throw new ValidationException(['file' => '附件仍被帖子引用，不能永久删除；请先移除帖子中的引用。']);
+            }
+            $asset->status = 'purging';
+            $asset->version++;
+            $asset->save();
+            return $asset;
+        });
+        // Removing files can fail; an interrupted purge remains retryable by media-library:prune.
+        $this->storage->remove($asset->uuid);
+        $this->db->transaction(function () use ($asset) {
+            // Use the same lock order and quota accounting as PruneCommand.
+            $user = User::whereKey($asset->user_id)->lockForUpdate()->first();
+            $locked = Asset::whereKey($asset->id)->lockForUpdate()->first();
+            if (!$locked || $locked->status !== 'purging') {
+                return;
+            }
+            $locked->delete();
+            if ($user) {
+                $user->local_media_bytes = max(0, (int) $user->local_media_bytes - $locked->size - (int) $locked->derived_bytes);
+                $user->local_media_count = max(0, (int) $user->local_media_count - 1);
+                $user->save();
+            }
+        });
+    }
+
     private function processEmoji(User $actor, Asset $asset): Asset
     {
         if ($this->profiles->enabled() && $asset->is_emoji && $asset->status === 'active' && !$asset->emoji_profile) {

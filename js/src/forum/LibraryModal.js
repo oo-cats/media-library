@@ -99,7 +99,7 @@ export default class LibraryModal extends Modal {
     if (this.busy) return;
     this.busy = true;
     try {
-      await app.request({ method, url: endpoint() + '/' + asset.id, body: { ...body, version: asset.version } });
+      await app.request({ method, url: endpoint() + '/' + asset.id + (method === 'POST' ? '/purge' : ''), body: { ...body, version: asset.version } });
       this.editing = null;
       await this.load();
     } catch (error) {
@@ -179,6 +179,12 @@ export default class LibraryModal extends Modal {
           if (asset.status === 'archived') this.mutate(asset, 'PATCH', { restore: true });
           else if (window.confirm(String(t('archive_confirm')))) this.mutate(asset, 'DELETE', {});
         } }, t(asset.status === 'archived' ? 'restore' : 'archive'))}
+        {asset.canManage && Button.component({
+          className: 'Button Button--danger',
+          disabled: this.busy || asset.referenceCount > 0,
+          title: asset.referenceCount > 0 ? String(t('delete_blocked')) : undefined,
+          onclick: () => { if (window.confirm(String(t('delete_confirm')))) this.mutate(asset, 'POST', {}); },
+        }, t('delete'))}
       </div>}
     </article>;
   }

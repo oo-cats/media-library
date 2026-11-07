@@ -49,3 +49,6 @@ local-media-library:
     archive: 归档
     restore: 恢复
     archive_confirm: 归档后不再允许新引用，已有帖子继续显示。无引用的附件满七天后可由管理员清理。确认归档？
+    delete: 永久删除
+    delete_blocked: 该附件仍被帖子引用。请先移除引用才能永久删除。
+    delete_confirm: 确定永久删除该附件及服务器上的文件吗？此操作不可撤销。

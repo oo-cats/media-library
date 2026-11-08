@@ -49,3 +49,6 @@ local-media-library:
     archive: Archive
     restore: Restore
     archive_confirm: Archive blocks new references. Existing posts keep displaying the file. Unreferenced files may be purged after seven days. Continue?
+    delete: Permanently delete
+    delete_blocked: Remove all post references before permanently deleting this attachment.
+    delete_confirm: Permanently delete this attachment and its stored files? This cannot be undone.

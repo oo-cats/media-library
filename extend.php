@@ -17,6 +17,7 @@ return [
         ->post('/media-library/assets', 'local-media-library.upload', Api\UploadController::class)
         ->patch('/media-library/assets/{uuid}', 'local-media-library.update', Api\UpdateController::class)
         ->delete('/media-library/assets/{uuid}', 'local-media-library.archive', Api\UpdateController::class)
+        ->post('/media-library/assets/{uuid}/purge', 'local-media-library.purge', Api\PurgeController::class)
         ->get('/media-library/files/{uuid}', 'local-media-library.file', Api\FileController::class),
     (new Extend\Frontend('forum'))->js(__DIR__.'/js/dist/forum.js')->css(__DIR__.'/resources/forum.less'),
     (new Extend\Frontend('admin'))->js(__DIR__.'/js/dist/admin.js'),
